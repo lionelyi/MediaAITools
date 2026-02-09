@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     git \
     wget \
     curl \
+    libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
 # 创建工作目录
@@ -47,12 +48,13 @@ FROM base AS runtime
 
 # 从 builder 复制已安装的 Python 包
 COPY --from=builder /usr/local/lib/python3.10/dist-packages /usr/local/lib/python3.10/dist-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
 # 复制项目文件
 COPY src/ /app/src/
 COPY api/ /app/api/
 COPY web/ /app/web/
-COPY .github/copilot-instructions.md /app/.github/copilot-instructions.md
+#COPY .github/copilot-instructions.md /app/.github/copilot-instructions.md
 
 # 创建必要的目录
 RUN mkdir -p /app/uploads /app/output /app/logs /app/models
